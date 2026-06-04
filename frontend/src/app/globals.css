@@ -1,0 +1,111 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f5f6f8;
+  --foreground: #18181b;
+
+  /* LinkPulse brand */
+  --lp-navy: #0b1636;
+  --lp-blue: #0a56ff;
+  --lp-blue-2: #1f7bff;
+  --lp-accent: #e11d2e;
+
+  /* Codename-style dashboard (reference UI) */
+  --dash-bg: #f5f6f8;
+  --dash-surface: #ffffff;
+  --dash-accent: var(--lp-blue);
+  --dash-accent-soft: rgba(10, 86, 255, 0.12);
+  --dash-radius: 20px;
+  --dash-radius-sm: 16px;
+  --dash-shadow: 0 4px 24px rgba(15, 23, 42, 0.06);
+  --dash-shadow-lg: 0 12px 40px rgba(15, 23, 42, 0.08);
+
+  /* Legacy lp tokens */
+  --lp-surface: #ffffff;
+  --lp-surface-2: #f6f8fc;
+  --lp-border: rgba(15, 23, 42, 0.08);
+  --lp-radius: 20px;
+  --lp-shadow-1: var(--dash-shadow);
+  --lp-shadow-2: var(--dash-shadow-lg);
+  --lp-shadow-3: var(--dash-shadow-lg);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+}
+
+html {
+  height: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  background: var(--dash-bg);
+  color: var(--foreground);
+  font-family: var(--font-sans), ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+    Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+  letter-spacing: -0.01em;
+  overflow-x: hidden;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* Main scroll regions — contain overflow, smooth mobile scroll */
+.app-scroll {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Prevent flex children from forcing horizontal overflow */
+.min-w-0 {
+  min-width: 0;
+}
+
+.lp-layered-bg {
+  background: var(--dash-bg);
+}
+
+/* Rounded soft cards (reference style) */
+.dash-card {
+  border-radius: var(--dash-radius);
+  background: var(--dash-surface);
+  box-shadow: var(--dash-shadow);
+  border: 1px solid rgba(15, 23, 42, 0.04);
+}
+
+.dash-card-sm {
+  border-radius: var(--dash-radius-sm);
+  background: var(--dash-surface);
+  box-shadow: var(--dash-shadow);
+  border: 1px solid rgba(15, 23, 42, 0.04);
+}
+
+.dash-pill {
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+}
+
+.lp-card {
+  border: 1px solid rgba(15, 23, 42, 0.04);
+  border-radius: var(--dash-radius);
+  background: var(--dash-surface);
+  box-shadow: var(--dash-shadow);
+  position: relative;
+}
+.lp-card::after {
+  display: none;
+}
+.lp-card--elevated,
+.lp-card--hero {
+  box-shadow: var(--dash-shadow-lg);
+}
+.lp-card--hover {
+  transition: transform 160ms ease, box-shadow 160ms ease;
+}
+.lp-card--hover:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--dash-shadow-lg);
+}

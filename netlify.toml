@@ -1,0 +1,12 @@
+# LinkPulse — deploy the Next.js app in frontend/ (Firebase + API routes on Netlify Functions)
+# Docs: NETLIFY_DEPLOY.md
+
+[build]
+  base = "frontend"
+  command = "npm run build"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"

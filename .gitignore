@@ -1,0 +1,23 @@
+# Secrets — never commit
+.env
+.env.local
+.env.*.local
+**/.env.local
+
+# Next.js
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+
+# Laravel (skip huge vendor folder)
+api/vendor/
+api/node_modules/
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Logs
+*.log

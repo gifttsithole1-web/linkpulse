@@ -1,0 +1,20 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Public QR landing — create-only buffer; CRM reads via Admin SDK on server
+    match /qr_submissions/{docId} {
+      allow create: if request.resource.data.keys().hasAll([
+          'name', 'surname', 'email', 'feedback'
+        ])
+        && request.resource.data.email is string
+        && request.resource.data.syncedToCrm == false;
+      allow read, update, delete: if false;
+    }
+
+    // All CRM data — server-side only (Next.js Admin SDK)
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
