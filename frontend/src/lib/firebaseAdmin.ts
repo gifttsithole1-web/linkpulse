@@ -1,4 +1,5 @@
 import { cert, getApps, initializeApp, type App } from "firebase-admin/app";
+import { getAuth, type Auth } from "firebase-admin/auth";
 import { getFirestore, type Firestore } from "firebase-admin/firestore";
 
 type ServiceAccount = {
@@ -29,18 +30,29 @@ function toServiceAccount(raw: Record<string, unknown>): ServiceAccount {
   return { projectId, clientEmail, privateKey };
 }
 
+let cachedApp: App | null = null;
 let cachedFirestore: Firestore | null = null;
+let cachedAuth: Auth | null = null;
 
-export function getAdminFirestore(): Firestore {
-  if (cachedFirestore) return cachedFirestore;
-
-  const adminApp: App =
+function getAdminApp(): App {
+  if (cachedApp) return cachedApp;
+  cachedApp =
     getApps().length > 0
       ? getApps()[0]!
       : initializeApp({
           credential: cert(toServiceAccount(getServiceAccountJson())),
         });
+  return cachedApp;
+}
 
-  cachedFirestore = getFirestore(adminApp);
+export function getAdminFirestore(): Firestore {
+  if (cachedFirestore) return cachedFirestore;
+  cachedFirestore = getFirestore(getAdminApp());
   return cachedFirestore;
+}
+
+export function getAdminAuth(): Auth {
+  if (cachedAuth) return cachedAuth;
+  cachedAuth = getAuth(getAdminApp());
+  return cachedAuth;
 }

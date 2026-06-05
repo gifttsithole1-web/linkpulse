@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { requireStaffApi } from "@/lib/auth/api-auth";
 import {
   getClients,
   getCommunicationLogs,
@@ -9,6 +10,9 @@ import {
 export const dynamic = "force-dynamic";
 
 export async function GET() {
+  const auth = await requireStaffApi();
+  if (auth.unauthorized) return auth.unauthorized;
+
   try {
     const [clients, loyalty, logs, feedback] = await Promise.all([
       getClients({ per_page: 500 }),

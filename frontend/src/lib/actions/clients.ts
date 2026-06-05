@@ -1,5 +1,6 @@
 "use server";
 
+import { requireStaffAction } from "@/lib/auth/require-staff-action";
 import { revalidatePath } from "next/cache";
 import { logAndDeliverMessage } from "@/lib/email-delivery";
 import { isBrevoConfigured } from "@/lib/brevo";
@@ -64,6 +65,7 @@ export async function createClientAction(input: {
   company_name?: string;
 }) {
   try {
+    await requireStaffAction();
     const data = await createClient(input);
     revalidateClientPaths(data.id);
     const history: HistoryPair = {
@@ -85,6 +87,7 @@ export async function updateClientAction(
   input: Record<string, unknown>,
 ) {
   try {
+    await requireStaffAction();
     const before = await getClientById(id);
     if (!before) throw new Error("Client not found");
     await updateClient(id, input);
@@ -108,6 +111,7 @@ export async function updatePipelineStageAction(
   id: string,
   pipeline_stage: "lead" | "quote" | "won" | "production",
 ) {
+  await requireStaffAction();
   const before = await getClientById(id);
   if (!before) {
     return { ok: false as const, error: "Client not found" };
@@ -140,6 +144,7 @@ export async function updatePipelineStageAction(
 
 export async function deleteClientAction(id: string) {
   try {
+    await requireStaffAction();
     await deleteClient(id);
     revalidateClientPaths();
     return { ok: true as const, data: { message: "Client deleted" } };
@@ -158,6 +163,7 @@ export async function sendMessageAction(input: {
   message_body: string;
 }) {
   try {
+    await requireStaffAction();
     const client = await getClientById(input.client_id);
     const result = await logAndDeliverMessage({
       ...input,
@@ -188,6 +194,7 @@ export async function awardPointsAction(
   marginCoefficient: number,
 ) {
   try {
+    await requireStaffAction();
     const points = await awardPoints(
       clientId,
       transactionAmount,

@@ -1,5 +1,6 @@
 "use server";
 
+import { requireStaffAction } from "@/lib/auth/require-staff-action";
 import { revalidatePath } from "next/cache";
 import {
   enrollLoyaltyMember,
@@ -22,6 +23,7 @@ function revalidateLoyalty(clientId?: string) {
 
 export async function addLoyaltyMemberAction(clientId: string) {
   try {
+    await requireStaffAction();
     await enrollLoyaltyMember(clientId);
     revalidateLoyalty(clientId);
     const history: HistoryPair = {
@@ -40,6 +42,7 @@ export async function addLoyaltyMemberAction(clientId: string) {
 
 export async function removeLoyaltyMemberAction(clientId: string) {
   try {
+    await requireStaffAction();
     const loyalty = await removeLoyaltyMember(clientId);
     revalidateLoyalty(clientId);
     const history: HistoryPair = {

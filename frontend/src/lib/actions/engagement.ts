@@ -1,5 +1,6 @@
 "use server";
 
+import { requireStaffAction } from "@/lib/auth/require-staff-action";
 import { revalidatePath } from "next/cache";
 import { assertWithinBrevoDailyCap, isBrevoConfigured } from "@/lib/brevo";
 import { deliverEmailBatch, logAndDeliverMessage } from "@/lib/email-delivery";
@@ -30,6 +31,7 @@ export async function launchCampaignAction(input: {
   audience: "all" | "opt_in" | "retail" | "corporate";
 }) {
   try {
+    await requireStaffAction();
     const { data: allClients } = await listClients(500);
     let clients = allClients;
 
@@ -115,6 +117,7 @@ export async function updateSettingsAction(input: {
   default_margin_coefficient?: number;
 }) {
   try {
+    await requireStaffAction();
     await updateSettings(input);
     revalidatePath("/settings");
     revalidatePath("/loyalty");
@@ -133,6 +136,7 @@ export async function redeemPointsAction(
   rewardLabel: string,
 ) {
   try {
+    await requireStaffAction();
     await redeemPoints(clientId, points, rewardLabel);
     revalidatePath("/loyalty");
     revalidatePath("/loyalty/redemptions");

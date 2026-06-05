@@ -1,5 +1,6 @@
 "use server";
 
+import { requireStaffAction } from "@/lib/auth/require-staff-action";
 import { revalidatePath } from "next/cache";
 import { applyHistoryRecord } from "@/lib/undo-apply";
 import type { UndoRecord } from "@/lib/undo-types";
@@ -22,6 +23,7 @@ function revalidateAll(clientId?: string) {
 
 export async function applyHistoryRecordAction(record: UndoRecord) {
   try {
+    await requireStaffAction();
     await applyHistoryRecord(record);
     revalidateAll(
       "clientId" in record ? (record.clientId as string) : undefined,

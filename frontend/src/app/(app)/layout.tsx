@@ -1,5 +1,11 @@
 import { DashboardShell } from "@/components/dashboard/DashboardShell";
+import { requireStaffSession } from "@/lib/auth/require-staff";
 
-export default function AppLayout({ children }: { children: React.ReactNode }) {
+export default async function AppLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  await requireStaffSession();
   return <DashboardShell>{children}</DashboardShell>;
 }

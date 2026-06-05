@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FiChevronDown, FiX } from "react-icons/fi";
+import { SignOutButton } from "@/components/auth/SignOutButton";
 import { LinkPulseLogo } from "@/components/brand/LinkPulseLogo";
 import { useDashboardShell } from "@/components/dashboard/DashboardShell";
 import { crmNavigation, type NavItem } from "@/config/crm-navigation";
@@ -93,11 +94,14 @@ export function DashboardSidebar({
         ))}
       </nav>
 
-      {!navOpen ? (
-        <p className="mt-3 hidden px-3 text-[10px] leading-relaxed text-zinc-400 lg:block">
-          Acquire → Manage → Engage → Reward → Deliver
-        </p>
-      ) : null}
+      <div className="mt-3 space-y-2">
+        <SignOutButton />
+        {!navOpen ? (
+          <p className="hidden px-3 text-[10px] leading-relaxed text-zinc-400 lg:block">
+            Acquire → Manage → Engage → Reward → Deliver
+          </p>
+        ) : null}
+      </div>
     </aside>
   );
 }
