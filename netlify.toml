@@ -4,8 +4,6 @@
 [build]
   base = "frontend"
   command = "npm run build"
-  # Must differ from base; overrides Netlify UI if it auto-fills "frontend/"
-  publish = ".next"
   # Must differ from base; Next.js plugin uses this output (not a static site root).
   publish = ".next"
 
