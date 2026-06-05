@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { FiLogOut } from "react-icons/fi";
+import { logoutStaffAction } from "@/lib/actions/auth";
 
 export function SignOutButton({ className = "" }: { className?: string }) {
   const router = useRouter();
@@ -11,7 +12,7 @@ export function SignOutButton({ className = "" }: { className?: string }) {
   async function signOut() {
     setPending(true);
     try {
-      await fetch("/api/auth/logout", { method: "POST" });
+      await logoutStaffAction();
       router.replace("/login");
       router.refresh();
     } finally {

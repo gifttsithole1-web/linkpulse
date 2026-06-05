@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { LinkPulseLogo } from "@/components/brand/LinkPulseLogo";
+import { createStaffSessionAction } from "@/lib/actions/auth";
 import { auth } from "@/lib/firebaseClient";
 
 export function LoginForm() {
@@ -23,21 +24,23 @@ export function LoginForm() {
     try {
       const cred = await signInWithEmailAndPassword(auth, email.trim(), password);
       const idToken = await cred.user.getIdToken();
-      const res = await fetch("/api/auth/session", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ idToken }),
-      });
-      const json = (await res.json()) as { error?: string };
-      if (!res.ok) {
-        throw new Error(json.error ?? "Could not start session");
+      const session = await createStaffSessionAction(idToken);
+      if (!session.ok) {
+        throw new Error(session.error ?? "Could not start session");
       }
       router.replace(next.startsWith("/") ? next : "/dashboard");
       router.refresh();
     } catch (err) {
-      setError(
-        err instanceof Error ? err.message : "Sign-in failed. Check your details.",
-      );
+      const code = (err as { code?: string })?.code;
+      if (code === "auth/invalid-credential" || code === "auth/wrong-password") {
+        setError("Incorrect email or password.");
+      } else if (code === "auth/too-many-requests") {
+        setError("Too many attempts. Wait a moment and try again.");
+      } else {
+        setError(
+          err instanceof Error ? err.message : "Sign-in failed. Check your details.",
+        );
+      }
     } finally {
       setPending(false);
     }
