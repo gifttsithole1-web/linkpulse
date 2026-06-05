@@ -1,16 +1,31 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FiDownload } from "react-icons/fi";
 import { downloadQrLandingPdf } from "@/lib/qr-pdf";
 
-const appUrl =
-  process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "") ?? "http://localhost:3000";
-const qrLandingUrl = `${appUrl}/qr`;
+function resolveAppUrl() {
+  if (typeof window !== "undefined") {
+    const { hostname, origin } = window.location;
+    if (hostname !== "localhost" && hostname !== "127.0.0.1") {
+      return origin;
+    }
+  }
+  return (
+    process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "") ?? "http://localhost:3000"
+  );
+}
 
 export function QrLandingPanel() {
+  const [appUrl, setAppUrl] = useState(resolveAppUrl);
   const [copyDone, setCopyDone] = useState(false);
   const [pdfStatus, setPdfStatus] = useState<"idle" | "loading" | "error">("idle");
+
+  useEffect(() => {
+    setAppUrl(resolveAppUrl());
+  }, []);
+
+  const qrLandingUrl = `${appUrl}/qr`;
 
   const qrImageUrl = `https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=${encodeURIComponent(
     qrLandingUrl,
@@ -79,10 +94,10 @@ export function QrLandingPanel() {
             </p>
           ) : null}
           <p className="text-xs text-zinc-500">
-            PDF includes a print-ready QR and your landing URL. For phones to scan
-            in production, set{" "}
-            <code className="rounded bg-zinc-100 px-1">NEXT_PUBLIC_APP_URL</code> in{" "}
-            <code className="rounded bg-zinc-100 px-1">.env.local</code>.
+            PDF includes a print-ready QR and your landing URL. On Netlify this
+            uses your live site URL automatically; set{" "}
+            <code className="rounded bg-zinc-100 px-1">NEXT_PUBLIC_APP_URL</code> for
+            local dev and PDFs generated off-site.
           </p>
         </div>
       </div>

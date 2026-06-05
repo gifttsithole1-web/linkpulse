@@ -4,9 +4,18 @@
 [build]
   base = "frontend"
   command = "npm run build"
+  # Must differ from base; overrides Netlify UI if it auto-fills "frontend/"
+  publish = ".next"
+  # Must differ from base; Next.js plugin uses this output (not a static site root).
+  publish = ".next"
 
 [build.environment]
   NODE_VERSION = "20"
+  # NEXT_PUBLIC_* are inlined into the client bundle by design; BREVO sender fields appear in UI pages.
+  SECRETS_SCAN_OMIT_KEYS = "NEXT_PUBLIC_APP_URL,NEXT_PUBLIC_FIREBASE_API_KEY,NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,NEXT_PUBLIC_FIREBASE_PROJECT_ID,NEXT_PUBLIC_FIREBASE_APP_ID,BREVO_SENDER_NAME,BREVO_SENDER_EMAIL"
+
+[functions]
+  directory = "netlify/functions"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"

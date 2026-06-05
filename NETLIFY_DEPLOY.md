@@ -17,6 +17,9 @@ This project’s **production app** is the Next.js site in `frontend/`. It talks
 3. Build settings (auto-read from `netlify.toml` at repo root):
    - **Base directory:** `frontend`
    - **Build command:** `npm run build`
+   - **Publish directory:** `.next` (not `frontend/` — that causes a build error)
+   - **Functions directory:** `netlify/functions` (Netlify may refuse blank; do **not** use `frontend/netlify/functions`)
+   - **Package directory:** leave blank if possible
    - **Plugin:** `@netlify/plugin-nextjs` (already in `frontend/package.json`)
 
 4. Deploy once (it will fail until env vars are set — that’s expected).
